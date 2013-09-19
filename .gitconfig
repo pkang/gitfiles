@@ -1,0 +1,68 @@
+[user]
+  name = Evan Sherwood
+  email = evan@neezer.net
+
+[diff]
+[color]
+  ui = auto
+
+[alias]
+  s = status
+  ci = commit
+  co = checkout
+  aa = add --all
+  b = branch
+  pr = pull --rebase
+  l = log --graph --all
+  sp = smart-pull
+
+[format]
+  pretty=format:%C(yellow)%h%Creset -%C(red)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
+  graph=true
+
+[push]
+  default = tracking
+
+[merge "railsschema"]
+  name = newer Rails schema version
+  driver = "ruby -e '\n\
+    system %(git), %(merge-file), %(--marker-size=%L), %(%A), %(%O), %(%B)\n\
+    b = File.read(%(%A))\n\
+    b.sub!(/^<+ .*\\nActiveRecord::Schema\\.define.:version => (\\d+). do\\n=+\\nActiveRecord::Schema\\.define.:version => (\\d+). do\\n>+ .*/) do\n\
+    %(ActiveRecord::Schema.define(:version => #{[$1, $2].max}) do)\n\
+    end\n\
+    File.open(%(%A), %(w)) {|f| f.write(b)}\n\
+    exit 1 if b.include?(%(<)*%L)'"
+
+[core]
+  editor = /usr/local/bin/vim
+  excludesfile = /Users/evan/.gitignore_global
+  excludesfiles = /Users/evan/.gitignore_global
+  ; autocrlf = true
+  ; whitespace = cr-at-eol
+
+[credential]
+  helper = osxkeychain
+
+[difftool "Kaleidoscope"]
+  cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+
+# If you want to set up Kaleidoscope as the default diff tool,
+# then also set the following variables:
+[difftool]
+  prompt = false
+
+[diff]
+  tool = Kaleidoscope
+
+[mergetool "Kaleidoscope"]
+  cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" \"$REMOTE\"
+
+# If you want to set up Kaleidoscope as the default merge tool,
+# then also set the following variables:
+[mergetool]
+  prompt = false
+  keepBackup=false
+
+[merge]
+  tool = Kaleidoscope
