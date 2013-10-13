@@ -1,6 +1,6 @@
 *
 !.gitignore.d
-!.gitignore.d/gitfiles
+!.gitignore.d/git
 !.gitconfig
 !.git_template
 !.git_template/hooks
